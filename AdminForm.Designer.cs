@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.comboTables = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.filtration = new System.Windows.Forms.ComboBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,10 +39,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.AddMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.editMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.SortMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.сортировкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.contextMenuStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -50,29 +52,34 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridView.Location = new System.Drawing.Point(0, 135);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(800, 315);
+            this.dataGridView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("GOST Type BU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.dataGridView.Size = new System.Drawing.Size(800, 207);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.TabStop = false;
             // 
             // comboTables
             // 
+            this.comboTables.Font = new System.Drawing.Font("GOST Type BU", 9.75F);
             this.comboTables.FormattingEnabled = true;
             this.comboTables.Location = new System.Drawing.Point(9, 89);
             this.comboTables.Name = "comboTables";
-            this.comboTables.Size = new System.Drawing.Size(232, 21);
+            this.comboTables.Size = new System.Drawing.Size(232, 23);
             this.comboTables.TabIndex = 2;
             this.comboTables.SelectedIndexChanged += new System.EventHandler(this.comboTables_SelectedIndexChanged_1);
             // 
-            // comboBox2
+            // filtration
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(592, 89);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(196, 21);
-            this.comboBox2.TabIndex = 3;
+            this.filtration.Font = new System.Drawing.Font("GOST Type BU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.filtration.FormattingEnabled = true;
+            this.filtration.Location = new System.Drawing.Point(534, 89);
+            this.filtration.Name = "filtration";
+            this.filtration.Size = new System.Drawing.Size(254, 23);
+            this.filtration.TabIndex = 3;
             // 
             // contextMenuStrip1
             // 
@@ -105,7 +112,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddMenu,
             this.editMenu,
-            this.сортировкаToolStripMenuItem,
+            this.SortMenu,
             this.deleteMenu});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -127,6 +134,13 @@
             this.editMenu.Name = "editMenu";
             this.editMenu.Size = new System.Drawing.Size(144, 27);
             this.editMenu.Text = "Редактировать";
+            // 
+            // SortMenu
+            // 
+            this.SortMenu.Font = new System.Drawing.Font("GOST Type BU", 14.25F);
+            this.SortMenu.Name = "SortMenu";
+            this.SortMenu.Size = new System.Drawing.Size(114, 27);
+            this.SortMenu.Text = "Сортировка";
             // 
             // deleteMenu
             // 
@@ -151,28 +165,37 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("GOST Type BU", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(588, 59);
+            this.label2.Location = new System.Drawing.Point(681, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(107, 23);
             this.label2.TabIndex = 8;
             this.label2.Text = "Фильтрация";
             // 
-            // сортировкаToolStripMenuItem
+            // contextMenuStrip3
             // 
-            this.сортировкаToolStripMenuItem.Font = new System.Drawing.Font("GOST Type BU", 14.25F);
-            this.сортировкаToolStripMenuItem.Name = "сортировкаToolStripMenuItem";
-            this.сортировкаToolStripMenuItem.Size = new System.Drawing.Size(114, 27);
-            this.сортировкаToolStripMenuItem.Text = "Сортировка";
+            this.contextMenuStrip3.Name = "contextMenuStrip3";
+            this.contextMenuStrip3.Size = new System.Drawing.Size(61, 4);
+            // 
+            // saveBtn
+            // 
+            this.saveBtn.Location = new System.Drawing.Point(607, 388);
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(180, 41);
+            this.saveBtn.TabIndex = 9;
+            this.saveBtn.Text = "Сохранить данные в таблицу";
+            this.saveBtn.UseVisualStyleBackColor = true;
+            this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.saveBtn);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.filtration);
             this.Controls.Add(this.comboTables);
             this.Controls.Add(this.dataGridView);
             this.MainMenuStrip = this.menuStrip1;
@@ -192,7 +215,7 @@
 
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ComboBox comboTables;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox filtration;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem добавитьToolStripMenuItem;
@@ -202,7 +225,9 @@
         private System.Windows.Forms.ToolStripMenuItem editMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteMenu;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripMenuItem сортировкаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SortMenu;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip3;
+        private System.Windows.Forms.Button saveBtn;
     }
 }
