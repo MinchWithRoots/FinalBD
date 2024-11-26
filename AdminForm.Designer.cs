@@ -57,6 +57,7 @@
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Location = new System.Drawing.Point(0, 135);
             this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("GOST Type BU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dataGridView.Size = new System.Drawing.Size(800, 207);
             this.dataGridView.TabIndex = 0;
@@ -70,7 +71,6 @@
             this.comboTables.Name = "comboTables";
             this.comboTables.Size = new System.Drawing.Size(232, 23);
             this.comboTables.TabIndex = 2;
-            this.comboTables.SelectedIndexChanged += new System.EventHandler(this.comboTables_SelectedIndexChanged_1);
             // 
             // filtration
             // 
@@ -134,6 +134,7 @@
             this.editMenu.Name = "editMenu";
             this.editMenu.Size = new System.Drawing.Size(144, 27);
             this.editMenu.Text = "Редактировать";
+            this.editMenu.Click += new System.EventHandler(this.editMenu_Click_1);
             // 
             // SortMenu
             // 
@@ -159,7 +160,6 @@
             this.label1.Size = new System.Drawing.Size(164, 23);
             this.label1.TabIndex = 7;
             this.label1.Text = "Выберите таблицу:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 

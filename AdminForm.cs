@@ -20,16 +20,21 @@ namespace CoffeeShopAppBD
 
         private void AdminForm_Load(object sender, EventArgs e)
         {
-            // Инициализация фильтров
+            dataGridView.ReadOnly = true;
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            // Добавление фильтров в ComboBox
+            filtration.Items.Add("Все записи");
             filtration.Items.Add("Недавние заказы");
             filtration.Items.Add("Товары в наличии");
-            filtration.Items.Add("Сотрудники на должности 'Менеджер'");
-            filtration.Items.Add("Все записи");
+            filtration.Items.Add("Сотрудники на должности 'Manager'");
+            filtration.Items.Add("Заказы с суммой больше 50");
+            filtration.Items.Add("Дорогие товары (цена > 50)");
 
-            // Подписка на событие изменения фильтра
+            // Подписка на изменение фильтров
             filtration.SelectedIndexChanged += filtration_SelectedIndexChanged;
 
-            // Другое содержимое метода
+            // Заполнение списка таблиц
             comboTables.Items.Add("Customers");
             comboTables.Items.Add("Employees");
             comboTables.Items.Add("Positions");
@@ -156,46 +161,6 @@ namespace CoffeeShopAppBD
             }
         }
 
-        private void EditMenuItem1_Click(object sender, EventArgs e)
-        {
-            dataGridView.ReadOnly = true;
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            try
-            {
-                if (dataGridView.DataSource is DataTable currentTable)
-                {
-                    // Разрешить редактирование в DataGridView
-                    dataGridView.ReadOnly = false;
-                    dataGridView.AllowUserToAddRows = true;
-                    dataGridView.AllowUserToDeleteRows = true;
-
-                    MessageBox.Show("Режим редактирования включен. Не забудьте сохранить изменения.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Нет данных для редактирования. Выберите таблицу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Произошла ошибка при включении режима редактирования: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-        }
-
-
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboTables_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-
-        }
 
         private void SortMenu_Click(object sender, EventArgs e)
         {
@@ -204,75 +169,69 @@ namespace CoffeeShopAppBD
 
         private void filtration_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboTables.SelectedItem == null || string.IsNullOrEmpty(comboTables.SelectedItem.ToString()))
+            LoadTableData();
+        }
+
+        private void LoadTableData()
+        {
+            string selectedTable = comboTables.SelectedItem?.ToString();
+            string selectedFilter = filtration.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(selectedTable))
             {
-                MessageBox.Show("Выберите таблицу для фильтрации.");
+                MessageBox.Show("Выберите таблицу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (filtration.SelectedItem == null || string.IsNullOrEmpty(filtration.SelectedItem.ToString()))
-            {
-                MessageBox.Show("Выберите фильтр.");
-                return;
-            }
-
-            string selectedTable = comboTables.SelectedItem.ToString();
-            string selectedFilter = filtration.SelectedItem.ToString();
             string filterQuery = "";
 
-            try
+            // Построение фильтра для выбранной таблицы
+            if (!string.IsNullOrEmpty(selectedFilter) && selectedFilter != "Все записи")
             {
-                // Построение SQL-запроса в зависимости от таблицы и фильтра
                 switch (selectedTable)
                 {
                     case "Orders":
-                        switch (selectedFilter)
-                        {
-                            case "Недавние заказы":
-                                filterQuery = "WHERE order_date >= DATEADD(DAY, -30, GETDATE())";
-                                break;
-                            case "Заказы с большой суммой":
-                                filterQuery = "WHERE total > 5000";
-                                break;
-                            default:
-                                MessageBox.Show("Выбранный фильтр недоступен для таблицы Orders.");
-                                return;
-                        }
+                        if (selectedFilter == "Недавние заказы")
+                            filterQuery = "WHERE order_date >= DATEADD(DAY, -30, GETDATE())";
+                        else if (selectedFilter == "Заказы с суммой больше 50")
+                            filterQuery = "WHERE total > 50";
                         break;
 
                     case "Products":
-                        switch (selectedFilter)
-                        {
-                            case "Товары в наличии":
-                                filterQuery = "WHERE quantity_in_stock > 0";
-                                break;
-                            case "Дорогие товары":
-                                filterQuery = "WHERE price > 100";
-                                break;
-                            default:
-                                MessageBox.Show("Выбранный фильтр недоступен для таблицы Products.");
-                                return;
-                        }
+                        if (selectedFilter == "Товары в наличии")
+                            filterQuery = "WHERE stock > 0";
+                        else if (selectedFilter == "Дорогие товары (цена > 50)")
+                            filterQuery = "WHERE price > 50";
+                        break;
+
+                    case "Employees":
+                        if (selectedFilter == "Сотрудники на должности 'Manager'")
+                            filterQuery = "WHERE position_id = '2'";
                         break;
 
                     default:
-                        MessageBox.Show("Фильтры для выбранной таблицы недоступны.");
+                        MessageBox.Show("Выбранный фильтр не применим к данной таблице.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                 }
+            }
 
-                // Выполнение SQL-запроса и обновление DataGridView
+            try
+            {
                 db.openConnection();
 
+                // Выполнение запроса с фильтром
                 string query = $"SELECT * FROM {selectedTable} {filterQuery}";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, db.GetSqlConnection());
-                DataTable filteredTable = new DataTable();
-                adapter.Fill(filteredTable);
+                DataTable table = new DataTable();
+                adapter.Fill(table);
 
-                dataGridView.DataSource = filteredTable;
+                // Отображение данных в DataGridView
+                dataGridView.DataSource = table;
+                dataGridView.Columns[1].Visible = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при фильтрации: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -312,6 +271,13 @@ namespace CoffeeShopAppBD
             {
                 MessageBox.Show($"Произошла ошибка при сохранении изменений: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void editMenu_Click_1(object sender, EventArgs e)
+        {
+            dataGridView.ReadOnly = false;
+            dataGridView.AllowUserToAddRows = true;
+            dataGridView.AllowUserToDeleteRows = true;
         }
     }
 }
