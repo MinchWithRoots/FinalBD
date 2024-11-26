@@ -70,6 +70,18 @@ namespace CoffeeShopAppBD
 
                 // Отображение данных в DataGridView
                 dataGridView.DataSource = table;
+
+                // Скрытие столбцов с ID (кроме Inventory и OrderItems)
+                if (selectedTable != "Inventory" && selectedTable != "OrderItems")
+                {
+                    foreach (DataGridViewColumn column in dataGridView.Columns)
+                    {
+                        if (column.Name.IndexOf("id", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            column.Visible = false; // Скрываем колонку с ID
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -227,7 +239,9 @@ namespace CoffeeShopAppBD
 
                 // Отображение данных в DataGridView
                 dataGridView.DataSource = table;
-                dataGridView.Columns[1].Visible = false;
+            
+                
+           
             }
             catch (Exception ex)
             {
